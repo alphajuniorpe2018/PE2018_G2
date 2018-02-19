@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Space Invaders</title>
 
-	<script src="../helpers.js"></script>
+	<script src="js/helpers.js"></script>
 
 	<style>
 	canvas {
@@ -71,7 +71,7 @@ function main() {
 		init();
 		run();
 	});
-	img.src = "../res/invaders.png";
+	img.src = "/res/invaders.png";
 };
 
 /**
@@ -245,9 +245,9 @@ function update() {
 			var a = aliens[j];
 			if (AABBIntersect(b.x, b.y, b.width, b.height, a.x, a.y, a.w, a.h)) {
 				aliens.splice(j, 1);
-                score += 10;
 				j--;
 				len2--;
+                score += 10;
 				bullets.splice(i, 1);
 				i--;
 				len--;
