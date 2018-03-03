@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Ranking</title>
+        
+    </head>
+    <body>
+        <table>
+  <tr>
+    <th>Name</th>
+    <th>Score</th> 
+  </tr>
+    
+ <tr>
+     <td id="outname"></td>
+     <td id="outscore"></td>
+ </tr>
+            
+
+</table>
+        <form onsubmit="return make_json(this);">
+            Name:<input type="text" name="name"/><br>
+            Score:<input type="text" id="score" disabled="disabled"/><br>
+            <input type="submit" name="Make JSON"/>
+        </form>
+        
+        
+
+
+    <script>
+    <!--
+        document.getElementById("score").value = valueOf(index.score);
+
+        function make_json(form){
+        var player={
+            "name":form.name.value,
+            "score": form.score.value
+        };
+        var html = JSON.stringify(json,0,4);
+        document.getElementById('outname').innerHTML = JSON.stringify(player.name);
+        document.getElementById('outscore').innerHTML = JSON.stringify(player.score);
+        return false;
+    }
+
+//-->
+</script>
+    </body>
+</html>

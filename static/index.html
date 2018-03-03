@@ -3,6 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Space Invaders</title>
+    <script>
+    var score;
+    </script>
 
 	<script src="js/helpers.js"></script>
 
@@ -40,10 +43,7 @@ aliens,
 dir,
 tank,
 bullets,
-cities,
-    
-name,
-score;
+cities;
 
 /**
  * Initiate and start the game
@@ -292,11 +292,10 @@ function update() {
 	}
     
     //check if bullet hit player
-   // var b = bullets;
     bullets.forEach(function(element){
-        if (element.y >= 554 && element.x < tank.x + 11 && element.x > tank.x - 11){
+        if (element.y >= 554 && element.x <= tank.x + 22 && element.x >= tank.x){
             alert("Game Over");
-            document.location.reload();
+            goRanking();
         }
     });
     
@@ -304,14 +303,14 @@ function update() {
     aliens.forEach(function(element){
         if(element.y >= 584){
             alert("Game Over");
-            document.location.reload();
+             goRanking();
         }
     });
     
     //check if any alien left
     if(score== 500){
         alert("You Won");
-        document.location.reload();
+         goRanking();
     }
     
 	// update the aliens at the current movement frequence
@@ -361,6 +360,15 @@ function render() {
 	// draw the tank sprite
 	display.drawSprite(tank.sprite, tank.x, tank.y);
 };
+    
+/**
+ * Add player and show score
+ */
+    //another html file with form and table
+    function goRanking(){
+        window.location.replace("ranking/rank.html")
+    }
+
 
 // start and run the game
 main();
