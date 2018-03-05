@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Ranking</title>
         
+        
     </head>
     <body>
         <table>
@@ -30,16 +31,16 @@
 
     <script>
     <!--
-        document.getElementById("score").value = valueOf(index.score);
+        document.getElementById("score").value = score.value;
 
         function make_json(form){
-        var player={
+        var json={
             "name":form.name.value,
             "score": form.score.value
         };
         var html = JSON.stringify(json,0,4);
-        document.getElementById('outname').innerHTML = JSON.stringify(player.name);
-        document.getElementById('outscore').innerHTML = JSON.stringify(player.score);
+        document.getElementById('outname').innerHTML = JSON.stringify(json.name);
+        document.getElementById('outscore').innerHTML = JSON.stringify(json.score);
         return false;
     }
 

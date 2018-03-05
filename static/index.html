@@ -27,7 +27,7 @@
 var
 
 /**
- * Game objects
+ * Objetos do jogo
  */
 display,
 input,
@@ -46,16 +46,16 @@ bullets,
 cities;
 
 /**
- * Initiate and start the game
+ * Comeca o jogo
  */
 function main() {
-	// create game canvas and inputhandeler
+	// Cria o canvas e o inputhandler
 	display = new Screen(504, 600);
 	input = new InputHandeler();
     score = 0;
     
 
-	// create all sprites fram assets image
+	// cria os sprites a partir da imagem base
 	var img = new Image();
 	img.addEventListener("load", function() {
 
@@ -67,7 +67,7 @@ function main() {
 		taSprite = new Sprite(this, 62, 0, 22, 16);
 		ciSprite = new Sprite(this, 84, 8, 36, 24);
 
-		// initate and run the game
+		// inicia e roda o jogo
 		init();
 		run();
 	});
@@ -75,27 +75,27 @@ function main() {
 };
 
 /**
- * Initate game objects
+ * inicia objetos de jogo
  */
 function init() {
-	// set start settings
+	// Define configuracoes de start
 	frames  = 0;
 	spFrame = 0;
 	lvFrame = 60;
 
 	dir = 1;
 
-	// create the tank object
+	// cria o objeto tanque
 	tank = {
 		sprite: taSprite,
 		x: (display.width - taSprite.w) / 2,
 		y: display.height - (30 + taSprite.h)
 	};
 
-	// initatie bullet array
+	// inicia array de tiro
 	bullets = [];
 
-	// create the cities object (and canvas)
+	// cria o objeto cidade e canvas
 	cities = {
 		canvas: null,
 		ctx: 	null,
@@ -104,10 +104,10 @@ function init() {
 		h: ciSprite.h,
 
 		/**
-		 * Create canvas and game graphic context
+		 * Cria canvas e game graphic context
 		 */
 		init: function() {
-			// create canvas and grab 2d context
+			// cria canvas e pega contexto 2D
 			this.canvas = document.createElement("canvas");
 			this.canvas.width = display.width;
 			this.canvas.height = this.h;
@@ -121,16 +121,16 @@ function init() {
 		},
 
 		/**
-		 * Create damage effect on city-canvas
+		 * Cria o dano no canvas da cidade
 		 * 
-		 * @param  {number} x x-coordinate
-		 * @param  {number} y y-coordinate
+		 * @param  {number} x coordenada x
+		 * @param  {number} y coordenada y
 		 */
 		generateDamage: function(x, y) {
-			// round x, y position
+			// round x, y posicao
 			x = Math.floor(x/2) * 2;
 			y = Math.floor(y/2) * 2;
-			// draw dagame effect to canva
+			
 			this.ctx.clearRect(x-2, y-2, 4, 4);
 			this.ctx.clearRect(x+2, y-4, 2, 4);
 			this.ctx.clearRect(x+4, y, 2, 2);
@@ -142,16 +142,16 @@ function init() {
 		},
 
 		/**
-		 * Check if pixel at (x, y) is opaque
+		 * Checagem se pixel em (x, y) e opaco
 		 * 
-		 * @param  {number} x x-coordinate
-		 * @param  {number} y y-coordinate
-		 * @return {bool}     boolean value if pixel opaque
+		 * @param  {number} x x-coordenada
+		 * @param  {number} y y-coordenada
+		 * @return {bool}     boolean se pixel e opaco
 		 */
 		hits: function(x, y) {
-			// transform y value to local coordinate system
+			// transforma valor y para coordenada local
 			y -= this.y;
-			// get imagedata and check if opaque
+			// pega imagedat e checa se e opaco
 			var data = this.ctx.getImageData(x, y, 1, 1);
 			if (data.data[3] !== 0) {
 				this.generateDamage(x, y);
@@ -160,16 +160,16 @@ function init() {
 			return false;
 		}
 	};
-	cities.init(); // initiate the cities
+	cities.init(); // inicia cidade
 
-	// create and populate alien array
+	// cria alien array
 	aliens = [];
 	var rows = [1, 0, 0, 2, 2];
 	for (var i = 0, len = rows.length; i < len; i++) {
 		for (var j = 0; j < 10; j++) {
 			var a = rows[i];
-			// create right offseted alien and push to alien
-			// array
+
+            
 			aliens.push({
 				sprite: alSprite[a],
 				x: 30 + j*30 + [0, 4, 0][a],
@@ -182,8 +182,7 @@ function init() {
 };
 
 /**
- * Wrapper around the game loop function, updates and renders
- * the game
+ * Faz updates e renderiza o jogo
  */
 function run() {
 	var loop = function() {
@@ -196,42 +195,40 @@ function run() {
 };
 
 /**
- * Update the game logic
+ * Atualiza logica do jogo
  */
 function update() {
-	// update the frame count
+	// atualiza o count de frames
 	frames++;
 
-	// update tank position depending on pressed keys
-	if (input.isDown(37)) { // Left
+	// atualiza posicao do tanque dependendo do input
+	if (input.isDown(37)) { // esquerda
 		tank.x -= 4;
 	}
-	if (input.isDown(39)) { // Right
+	if (input.isDown(39)) { // direita
 		tank.x += 4;
 	}
-	// keep the tank sprite inside of the canvas
+	// sprite do tanque sempre dentro do canvas
 	tank.x = Math.max(Math.min(tank.x, display.width - (30 + taSprite.w)), 30);
 
-	// append new bullet to the bullet array if spacebar is
-	// pressed
-	if (input.isPressed(32)) { // Space
+	// faz tiro quando receber o input respectivo
+	if (input.isPressed(32)) { // tecla espaço
 		bullets.push(new Bullet(tank.x + 10, tank.y, -8, 2, 6, "#fff"));
 	}
 
-	// update all bullets position and checks
+	// atualiza todas as posicoes de tiros
 	for (var i = 0, len = bullets.length; i < len; i++) {
 		var b = bullets[i];
 		b.update();
-		// remove bullets outside of the canvas
+		// remove tiros de fora do canvas
 		if (b.y + b.height < 0 || b.y > display.height) {
 			bullets.splice(i, 1);
 			i--;
 			len--;
 			continue;
 		}
-		// check if bullet hits any city
-		var h2 = b.height * 0.5; // half hight is used for
-								 // simplicity
+		// checa se o tiro acertou cidade
+		var h2 = b.height * 0.5; 
 		if (cities.y < b.y+h2 && b.y+h2 < cities.y + cities.h) {
 			if (cities.hits(b.x, b.y+h2)) {
 				bullets.splice(i, 1);
@@ -240,7 +237,7 @@ function update() {
 				continue;
 			}
 		}
-		// check if bullet hit any aliens
+		// checa se o tiro acertou um alien
 		for (var j = 0, len2 = aliens.length; j < len2; j++) {
 			var a = aliens[j];
 			if (AABBIntersect(b.x, b.y, b.width, b.height, a.x, a.y, a.w, a.h)) {
@@ -251,8 +248,7 @@ function update() {
 				bullets.splice(i, 1);
 				i--;
 				len--;
-				// increase the movement frequence of the aliens
-				// when there are less of them
+				// aumenta a rapidez das fileiras dos aliens quando tem menos deles (dificuldade)
 				switch (len2) {
 					case 30: {
 						this.lvFrame = 40;
@@ -275,11 +271,10 @@ function update() {
 		}        
 	}
     
-	// makes the alien shoot in an random fashion 
+	// faz os tiros dos aliens serem randomicos  
 	if (Math.random() < 0.03 && aliens.length > 0) {
 		var a = aliens[Math.round(Math.random() * (aliens.length - 1))];
-		// iterate through aliens and check collision to make
-		// sure only shoot from front line
+		// so atirar da primeira fileira
 		for (var i = 0, len = aliens.length; i < len; i++) {
 			var b = aliens[i];
 
@@ -287,11 +282,11 @@ function update() {
 				a = b;
 			}
 		}
-		// create and append new bullet
+		// criar e "appendar" tiro
 		bullets.push(new Bullet(a.x + a.w*0.5, a.y + a.h, 4, 2, 4, "#fff"));
 	}
     
-    //check if bullet hit player
+    //checa se o tiro acertou o jogador
     bullets.forEach(function(element){
         if (element.y >= 554 && element.x <= tank.x + 22 && element.x >= tank.x){
             alert("Game Over");
@@ -299,7 +294,7 @@ function update() {
         }
     });
     
-    //check if any alien passed player
+    //checa se um alien passou o jogador
     aliens.forEach(function(element){
         if(element.y >= 584){
             alert("Game Over");
@@ -307,29 +302,28 @@ function update() {
         }
     });
     
-    //check if any alien left
+    //checa se ha algum alien restante
     if(score== 500){
         alert("You Won");
          goRanking();
     }
     
-	// update the aliens at the current movement frequence
+	// Atualizar movimentacao de aliens
 	if (frames % lvFrame === 0) {
 		spFrame = (spFrame + 1) % 2;
 
 		var _max = 0, _min = display.width;
-		// iterate through aliens and update postition
+		// iteracao de aliens
 		for (var i = 0, len = aliens.length; i < len; i++) {
 			var a = aliens[i];
 			a.x += 30 * dir;
-			// find min/max values of all aliens for direction
-			// change test
+			//achar o minimo/maximo de aliens
 			_max = Math.max(_max, a.x + a.w);
 			_min = Math.min(_min, a.x);
 		}
-		// check if aliens should move down and change direction
+		// checa se os aliens chegaram no limite e devem mudar posicao
 		if (_max > display.width - 30 || _min < 30) {
-			// mirror direction and update position
+			// espelhar e atualizar direcao
 			dir *= -1;
 			for (var i = 0, len = aliens.length; i < len; i++) {
 				aliens[i].x += 30 * dir;
@@ -340,37 +334,36 @@ function update() {
 };
 
 /**
- * Render the game state to the canvas
+ * Renderizar o game state para o canvas
  */
 function render() {
-	display.clear(); // clear the game canvas
-	// draw all aliens
+	display.clear(); // limpar o canvas do jogo
+	// fazer draw de todos os aliens
 	for (var i = 0, len = aliens.length; i < len; i++) {
 		var a = aliens[i];
 		display.drawSprite(a.sprite[spFrame], a.x, a.y);
 	}
-	// save contetx and draw bullet then restore
+	// salvar contexto e draw de tiro
 	display.ctx.save();
 	for (var i = 0, len = bullets.length; i < len; i++) {
 		display.drawBullet(bullets[i]);
 	}
 	display.ctx.restore();
-	// draw the city graphics to the canvas
+	// fazer draw de graficos de cidade para o canvas
 	display.ctx.drawImage(cities.canvas, 0, cities.y);
-	// draw the tank sprite
+	// fazer draw de sprite de tanque
 	display.drawSprite(tank.sprite, tank.x, tank.y);
 };
     
 /**
- * Add player and show score
+ * Adicionar jogador e salvar pontuacao
  */
-    //another html file with form and table
     function goRanking(){
         window.location.replace("ranking/rank.html")
     }
 
 
-// start and run the game
+// Comecar a rodar o jogo
 main();
 </script>
 </body>
